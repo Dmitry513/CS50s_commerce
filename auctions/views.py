@@ -6,6 +6,8 @@ from django.urls import reverse
 
 from .models import User
 
+from .forms import CommodityForm
+
 
 def index(request):
     return render(request, "auctions/index.html")
@@ -65,3 +67,25 @@ def register(request):
 
 def mylisting(request):
     return render(request, 'auctions/mylisting.html')
+
+
+def mybids(request):
+    return render(request, 'auctions/mybids.html')
+
+
+def createlisting(request):
+    if request.method == 'POST':
+        print(request.POST.keys())
+        form = CommodityForm(request.POST)
+        if form.is_valid():
+            return render(request, 'auctions/createlisting.html', {
+                'form': CommodityForm
+            })
+        else:
+            return render(request, 'auctions/createlisting.html', {
+                'form': form
+            })
+    else:
+        return render(request, 'auctions/createlisting.html', {
+            'form': CommodityForm
+        })
