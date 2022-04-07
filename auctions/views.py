@@ -66,7 +66,13 @@ def register(request):
 
 
 def mylisting(request):
-    return render(request, 'auctions/mylisting.html')
+    if request.user.is_authenticated:
+        mylistings = User.objects.get(pk=request.user.id).commodities.all()
+        return render(request, 'auctions/mylisting.html', {
+            'listings': mylistings
+        })
+    else:
+        return HttpResponseRedirect(reverse('login'))
 
 
 def mybids(request):
@@ -78,13 +84,12 @@ def createlisting(request):
         form = CommodityForm(request.POST)
         if form.is_valid():
             user = User.objects.get(pk=int(request.user.id))
-            if request.POST['image']:
-                commodity = Commodity(name=request.POST['name'],
-                                      description=request.POST['description'],
-                                      user=user,
-                                      image=request.POST['image'],
-                                      startprice=int(request.POST['startprice']))
-                commodity.save()
+            commodity = Commodity(name=request.POST['name'],
+                                  description=request.POST['description'],
+                                  user=user,
+                                  image=request.FILES['image'],
+                                  startprice=int(request.POST['startprice']))
+            commodity.save()
             return render(request, 'auctions/createlisting.html', {
                 'form': CommodityForm,
                 'message': 'Listing saved successfully!'
@@ -97,3 +102,5 @@ def createlisting(request):
         return render(request, 'auctions/createlisting.html', {
             'form': CommodityForm
         })
+
+

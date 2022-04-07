@@ -1,4 +1,5 @@
 {% extends 'auctions/layout.html' %}
+{% load static %}
 
 {% block title %}
     My listings&Bids
@@ -8,18 +9,26 @@
 <div class="div">
     <a class="btn btn-primary my-2" href="{% url 'createlisting' %}" role="button">Create a new listing</a>
 </div>
-<div class="card mb-8 " style="max-width: 900px;">
-  <div class="row g-0">
-    <div class="col-md-2">
-      <img src="..." class="img-fluid rounded-start" alt="...">
-    </div>
-    <div class="col-md-10">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+{% for list in listings %}
+    <div class="card mb-8 " style="max-width: 900px;">
+      <div class="row g-0">
+        <div class="col-md-2">
+            {% if list.image %}
+                <div>
+                    <img src="{{ list.image.url }}" class="img-fluid rounded-start" alt={{ list.name }}>
+                </div>
+            {% else %}
+
+            {% endif %}
+        </div>
+        <div class="col-md-10">
+          <div class="card-body">
+            <h5 class="card-title">{{ list.name}}</h5>
+            <p class="card-text">{{ list.description }}</p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+{% endfor %}
 {% endblock %}
