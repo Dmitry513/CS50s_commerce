@@ -12,7 +12,8 @@ class Commodity(models.Model):
     name = models.TextField(max_length=32)
     description = models.TextField(max_length=600)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commodities')
-    image = models.FilePathField(path="./datastorage/images", null=True, blank=True)
+    image = models.ImageField(upload_to="./datastorage/images",
+                              null=True, blank=True)
     startprice = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(1e7)])
 
     def __str__(self):

@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Commodity
 
 from .forms import CommodityForm
 
@@ -75,11 +75,19 @@ def mybids(request):
 
 def createlisting(request):
     if request.method == 'POST':
-        print(request.POST.keys())
         form = CommodityForm(request.POST)
         if form.is_valid():
+            user = User.objects.get(pk=int(request.user.id))
+            if request.POST['image']:
+                commodity = Commodity(name=request.POST['name'],
+                                      description=request.POST['description'],
+                                      user=user,
+                                      image=request.POST['image'],
+                                      startprice=int(request.POST['startprice']))
+                commodity.save()
             return render(request, 'auctions/createlisting.html', {
-                'form': CommodityForm
+                'form': CommodityForm,
+                'message': 'Listing saved successfully!'
             })
         else:
             return render(request, 'auctions/createlisting.html', {
